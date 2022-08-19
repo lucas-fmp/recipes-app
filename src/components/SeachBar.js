@@ -21,7 +21,7 @@ function SearchBar(title) {
   const [radioName, setRadioName] = useState('');
   const { setSearchedFoods } = useContext(MyContext);
 
-  async function SearchFoods() {
+  async function searchFoods() {
     if (radioName === 'Ingredient') {
       const response = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${searchInput}`);
       const data = response.json();
@@ -45,6 +45,40 @@ function SearchBar(title) {
       setSearchedFoods(data);
       noFoods(data);
       verificaData(data, title);
+    }
+  }
+  async function searchDrinks() {
+    if (radioName === 'Ingredient') {
+      const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${searchInput}`);
+      const data = response.json();
+      setSearchedFoods(data);
+      noFoods(data);
+      verificaData(data, title);
+    }
+    if (radioName === 'Name') {
+      const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${searchInput}`);
+      const data = response.json();
+      setSearchedFoods(data);
+      noFoods(data);
+      verificaData(data, title);
+    }
+    if (radioName === 'first letter' && searchInput.length > 1) {
+      alert('Your search must have only 1 (one) character');
+    }
+    if (radioName === 'First letter' && searchInput.length === 1) {
+      const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?f=${searchInput}`);
+      const data = response.json();
+      setSearchedFoods(data);
+      noFoods(data);
+      verificaData(data, title);
+    }
+  }
+
+  function SearchItems() {
+    if (title === 'Foods') {
+      searchFoods();
+    } else if (title === 'Drinks') {
+      searchDrinks();
     }
   }
 
@@ -86,7 +120,7 @@ function SearchBar(title) {
       <button
         type="button"
         data-testid="exec-search-btn"
-        onClick={ () => SearchFoods() }
+        onClick={ () => SearchItems() }
       >
         Seach
       </button>
