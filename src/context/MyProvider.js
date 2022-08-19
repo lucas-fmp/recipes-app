@@ -6,6 +6,7 @@ function MyProvider({ children }) {
   const [recipes, setRecipes] = useState([]);
   const [categories, setCategories] = useState([]);
   const [filteredRecipes, setFilteredRecipes] = useState([]);
+  const [searchedFoods, setSearchedFoods] = useState([]);
 
   const value = {
     recipes,
@@ -14,6 +15,8 @@ function MyProvider({ children }) {
     setCategories,
     filteredRecipes,
     setFilteredRecipes,
+    setSearchedFoods,
+    searchedFoods,
   };
 
   return (
