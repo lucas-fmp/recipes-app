@@ -1,3 +1,3 @@
 import { PLACEHOLDER } from './actionTypes';
 
-export const minhaAction = (value) => ({ type: PLACEHOLDER, value });
+export const minhaAction = (payload) => ({ type: PLACEHOLDER, payload });
