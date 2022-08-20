@@ -18,6 +18,8 @@ function App() {
       <Route path="/profile" />
       <Route path="/done-recipes" />
       <Route path="/favorite-recipes" />
+      <Route path="/foods" component={ Recipes } />
+      <Route path="/drinks" component={ Recipes } />
     </Switch>
   );
 }
