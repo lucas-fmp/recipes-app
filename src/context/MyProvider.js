@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import MyContext from './MyContext';
 
 function MyProvider({ children }) {
-  const value = {};
+  const [recipes, setRecipes] = useState([]);
+  const [categories, setCategories] = useState([]);
+
+  const value = {
+    recipes, setRecipes, categories, setCategories,
+  };
 
   return (
     <MyContext.Provider value={ value }>
