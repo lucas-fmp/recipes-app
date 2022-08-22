@@ -2,14 +2,16 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import MyContext from '../context/MyContext';
 // import Footer from '../components/Footer';
-// import Header from '../components/Header';
+import Header from '../components/Header';
 
 function Recipes() {
   const history = useHistory();
   const path = history.location.pathname;
+  const title = path.replace('/', '');
+
   const {
     recipes, setRecipes, categories, setCategories,
-    filteredRecipes, setFilteredRecipes,
+    filteredRecipes, setFilteredRecipes, setTitle, setShowHeader, setSearch,
   } = useContext(MyContext);
   const maxRecipes = 12;
   const maxCategories = 5;
@@ -41,13 +43,20 @@ function Recipes() {
       }
     };
     fetchAPI();
+    setTitle(title);
+    setShowHeader(true);
+    setSearch(true);
   }, []);
 
   const redirect = (recipe) => {
     if (recipe.idMeal) {
       history.push(`/foods/${recipe.idMeal}`);
+      setShowHeader(false);
+      setSearch(false);
     } else {
       history.push(`/drinks/${recipe.idDrink}`);
+      setShowHeader(false);
+      setSearch(false);
     }
   };
 
@@ -100,7 +109,7 @@ function Recipes() {
 
     categories.map((category, index) => (
       index === 0 ? (
-        <>
+        <div key={ category.strCategory }>
           <button
             type="button"
             onClick={ onClick }
@@ -111,14 +120,13 @@ function Recipes() {
           </button>
           <button
             type="button"
-            key={ category.strCategory }
             data-testid={ `${category.strCategory}-category-filter` }
             onClick={ onClick }
             value={ category.strCategory }
           >
             {category.strCategory}
           </button>
-        </>
+        </div>
       ) : (
         <button
           type="button"
@@ -136,7 +144,7 @@ function Recipes() {
 
   return (
     <div>
-      {/* <Header title={ path } /> */}
+      <Header title="Foods" />
       {
         renderFilterButtons()
       }
