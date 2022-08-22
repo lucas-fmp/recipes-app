@@ -17,17 +17,18 @@ function MyProvider({ children }) {
     categories,
     setCategories,
 <<<<<<< HEAD
+<<<<<<< HEAD
     filteredRecipes,
     setFilteredRecipes,
 =======
 <<<<<<< HEAD
 >>>>>>> 27fe9f8 (Recipes Page - completed)
+=======
+>>>>>>> 819e731 (resolving conflicts)
     setSearchedFoods,
     searchedFoods,
-=======
     filteredRecipes,
     setFilteredRecipes,
->>>>>>> fdc2bb5 (Recipes Page - completed)
   };
 
   return (
