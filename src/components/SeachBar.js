@@ -1,86 +1,115 @@
 import React, { useState, useContext } from 'react';
-import { Redirect } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import MyContext from '../context/MyContext';
 
-function verificaData(data, title) {
-  if (data.length === 1 && title === 'Foods') {
-    <Redirect to={ `foods/${data[0].id}` } />;
-  } else if (data.length === 1 && title === 'Drinks') {
-    <Redirect to={ `drinks/${data[0].id}` } />;
-  }
-}
-
-function noFoods(data) {
-  if (data.length === 0) {
-    alert('Sorry, we haven\'t found any recipes for these filters.\'');
-  }
-}
-
-function SearchBar(title) {
+function SearchBar() {
   const [searchInput, setSearchInput] = useState('');
-  const [radioName, setRadioName] = useState('');
-  const { setSearchedFoods } = useContext(MyContext);
+  const [radioId, setRadioId] = useState('');
+  const { setFilteredRecipes } = useContext(MyContext);
+  const maxRecipes = 12;
+  const { title } = useContext(MyContext);
+  const firstLetter = 'First Letter';
+  const history = useHistory();
 
-  async function searchFoods() {
-    if (radioName === 'Ingredient') {
-      const response = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${searchInput}`);
-      const data = response.json();
-      setSearchedFoods(data);
-      noFoods(data);
-      verificaData(data, title);
+  const verificaData = (data) => {
+    if (data.length === 1 && title === 'foods') {
+      history.push(`/foods/${data[0].idMeal}`);
     }
-    if (radioName === 'Name') {
-      const response = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${searchInput}`);
-      const data = response.json();
-      setSearchedFoods(data);
-      noFoods(data);
-      verificaData(data, title);
+    if (data.length === 1 && title === 'drinks') {
+      console.log(data[0]);
+      history.push(`/drinks/${data[0].idDrink}`);
     }
-    if (radioName === 'first letter' && searchInput.length > 1) {
+  };
+
+  const noFoods = () => {
+    alert('Sorry, we haven\'t found any recipes for these filters.');
+  };
+
+  const searchFoods = async () => {
+    if (radioId === 'ingredient') {
+      try {
+        const response = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${searchInput}`);
+        const data = await response.json();
+        const dataFiltered = data.meals.slice(0, maxRecipes);
+        setFilteredRecipes(dataFiltered);
+        verificaData(dataFiltered);
+      } catch (error) {
+        noFoods();
+      }
+    }
+    if (radioId === 'name') {
+      try {
+        const response = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${searchInput}`);
+        const data = await response.json();
+        const dataFiltered = data.meals.slice(0, maxRecipes);
+        setFilteredRecipes(dataFiltered);
+        verificaData(dataFiltered);
+      } catch (error) {
+        noFoods();
+      }
+    }
+    if (radioId === firstLetter && searchInput.length > 1) {
       alert('Your search must have only 1 (one) character');
     }
-    if (radioName === 'First letter' && searchInput.length === 1) {
-      const response = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?f=${searchInput}`);
-      const data = response.json();
-      setSearchedFoods(data);
-      noFoods(data);
-      verificaData(data, title);
+    if (radioId === firstLetter && searchInput.length === 1) {
+      try {
+        const response = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?f=${searchInput}`);
+        const data = await response.json();
+        console.log(typeof data);
+        const dataFiltered = data.meals.slice(0, maxRecipes);
+        setFilteredRecipes(dataFiltered);
+        verificaData(dataFiltered);
+      } catch (error) {
+        noFoods();
+      }
     }
-  }
-  async function searchDrinks() {
-    if (radioName === 'Ingredient') {
-      const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${searchInput}`);
-      const data = response.json();
-      setSearchedFoods(data);
-      noFoods(data);
-      verificaData(data, title);
+  };
+  const searchDrinks = async () => {
+    if (radioId === 'ingredient') {
+      try {
+        const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${searchInput}`);
+        const data = await response.json();
+        const dataFiltered = data.drinks.slice(0, maxRecipes);
+        setFilteredRecipes(dataFiltered);
+        verificaData(dataFiltered);
+      } catch (error) {
+        noFoods();
+      }
     }
-    if (radioName === 'Name') {
-      const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${searchInput}`);
-      const data = response.json();
-      setSearchedFoods(data);
-      noFoods(data);
-      verificaData(data, title);
+    if (radioId === 'name') {
+      try {
+        const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${searchInput}`);
+        const data = await response.json();
+        const dataFiltered = data.drinks.slice(0, maxRecipes);
+        setFilteredRecipes(dataFiltered);
+        verificaData(dataFiltered);
+      } catch (error) {
+        noFoods();
+      }
     }
-    if (radioName === 'first letter' && searchInput.length > 1) {
+    if (radioId === firstLetter && searchInput.length > 1) {
       alert('Your search must have only 1 (one) character');
     }
-    if (radioName === 'First letter' && searchInput.length === 1) {
-      const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?f=${searchInput}`);
-      const data = response.json();
-      setSearchedFoods(data);
-      noFoods(data);
-      verificaData(data, title);
+    if (radioId === firstLetter && searchInput.length === 1) {
+      try {
+        const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?f=${searchInput}`);
+        const data = await response.json();
+        const dataFiltered = data.drinks.slice(0, maxRecipes);
+        setFilteredRecipes(dataFiltered);
+        verificaData(dataFiltered);
+      } catch (error) {
+        noFoods();
+      }
     }
-  }
+  };
 
-  function SearchItems() {
-    if (title === 'Foods') {
+  const SearchItems = () => {
+    if (title === 'foods') {
       searchFoods();
-    } else if (title === 'Drinks') {
+    } else if (title === 'drinks') {
       searchDrinks();
     }
-  }
+  };
 
   return (
     <div>
@@ -93,36 +122,39 @@ function SearchBar(title) {
       <label htmlFor="ingredient">
         ingredient
         <input
+          id="ingredient"
           type="radio"
           data-testid="ingredient-search-radio"
-          name="Ingredient"
-          onClick={ (e) => setRadioName(e.target.name) }
+          name="radio"
+          onClick={ (e) => setRadioId(e.target.id) }
         />
       </label>
       <label htmlFor="name">
         Name
         <input
+          id="name"
           type="radio"
           data-testid="name-search-radio"
-          name="Name"
-          onClick={ (e) => setRadioName(e.target.name) }
+          name="radio"
+          onClick={ (e) => setRadioId(e.target.id) }
         />
       </label>
-      <label htmlFor="First Letter">
+      <label htmlFor={ firstLetter }>
         First Letter
         <input
+          id={ firstLetter }
           type="radio"
           data-testid="first-letter-search-radio"
-          name="First letter"
-          onClick={ (e) => setRadioName(e.target.name) }
+          name="radio"
+          onClick={ (e) => setRadioId(e.target.id) }
         />
       </label>
       <button
         type="button"
         data-testid="exec-search-btn"
-        onClick={ () => SearchItems() }
+        onClick={ SearchItems }
       >
-        Seach
+        Search
       </button>
     </div>
   );

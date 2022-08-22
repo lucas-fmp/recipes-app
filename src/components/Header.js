@@ -1,40 +1,51 @@
-import React, { useState } from 'react';
-import { Redirect } from 'react-router-dom';
+import React, { useContext, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import MyContext from '../context/MyContext';
 import SearchBar from './SeachBar';
+import profileIcon from '../images/profileIcon.svg';
+import searchIcon from '../images/searchIcon.svg';
 
-function Header(title, search) {
-  const sendProfile = () => {
-    <Redirect to="/profile" />;
-  };
-
+function Header() {
   const [showSearchBar, setShowSearchBar] = useState(false);
+  const {
+    title, search, showHeader,
+  } = useContext(MyContext);
+  const newTitle = title.length > 0 ? title[0].toUpperCase() + title.substr(1) : '';
+  const history = useHistory();
+  const sendProfile = () => {
+    history.push('/profile');
+  };
 
   return (
     <div>
-      <h1 data-testid="page-title">{ title }</h1>
-      <button
-        type="button"
-        data-testid="profile-top-btn"
-        onClick={ sendProfile }
-      >
-        <img
-          src="src/images/profileIcon.svg"
-          alt="icone de perfil"
-        />
-      </button>
-      { search && (
-        <button
-          type="button"
-          data-testid="search-top-btn"
-          onClick={ setShowSearchBar(!showSearchBar) }
-        >
-          <img
-            src="src/images/searchIcon.svg"
+      { showHeader && (
+        <div>
+          <h1 data-testid="page-title">{ newTitle }</h1>
+          <button
+            type="button"
+            data-testid="profile-top-btn"
+            onClick={ sendProfile }
+            src={ profileIcon }
             alt="icone de perfil"
-          />
-        </button>
+          >
+            Profile
+          </button>
+          {
+            search && (
+              <button
+                type="button"
+                data-testid="search-top-btn"
+                onClick={ () => setShowSearchBar(!showSearchBar) }
+                src={ searchIcon }
+                alt="icone de pesquisa"
+              >
+                Search
+              </button>
+            )
+          }
+        </div>
       )}
-      { showSearchBar && <SearchBar title={ title } /> }
+      { showSearchBar && <SearchBar /> }
     </div>
   );
 }
