@@ -31,7 +31,6 @@ function Login() {
 
   const handleChange = ({ target }) => {
     if (target.name === 'Email') {
-      console.log('funcionou');
       setEmail(target.value);
       validateButton();
     } else {
