@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import MyContext from '../context/MyContext';
-// import Footer from '../components/Footer';
+import Footer from '../components/Footer';
 import Header from '../components/Header';
 
 function Recipes() {
@@ -151,7 +151,7 @@ function Recipes() {
       {
         filteredRecipes.length === 0 ? cardRecipes(recipes) : cardRecipes(filteredRecipes)
       }
-      {/* <Footer /> */}
+      <Footer />
     </div>
   );
 }

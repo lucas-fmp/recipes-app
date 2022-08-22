@@ -11,8 +11,8 @@ import FavoriteRecipes from './pages/FavoriteRecipes';
 function App() {
   return (
     <Switch>
-      <Route path="/foods" component={ Recipes } />
-      <Route path="/drinks" component={ Recipes } />
+      <Route exact path="/foods" component={ Recipes } />
+      <Route exact path="/drinks" component={ Recipes } />
       <Route path="/foods/{id-da-receita}" />
       <Route path="/drinks/{id-da-receita}" />
       <Route exact path="/" component={ Login } />
