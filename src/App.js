@@ -7,6 +7,15 @@ import Login from './pages/Login';
 function App() {
   return (
     <Switch>
+      <Route path="/foods" />
+      <Route path="/drinks" />
+      <Route path="foods{id-da-receita}" />
+      <Route path="/drinks/{id-da-receita}" />
+      <Route path="/foods/{id-da-receita}/in-progress" />
+      <Route path="/drinks/{id-da-receita}/in-progress" />
+      <Route path="/profile" />
+      <Route path="/done-recipes" />
+      <Route path="/favorite-recipes" />
       <Route exact path="/" component={ Login } />
     </Switch>
   );
