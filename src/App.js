@@ -1,12 +1,12 @@
 import React from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Route, Switch } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
+import Login from './pages/Login';
 
 function App() {
   return (
     <Switch>
-      <Route exact path="/" />
       <Route path="/foods" />
       <Route path="/drinks" />
       <Route path="foods{id-da-receita}" />
@@ -16,6 +16,7 @@ function App() {
       <Route path="/profile" />
       <Route path="/done-recipes" />
       <Route path="/favorite-recipes" />
+      <Route exact path="/" component={ Login } />
     </Switch>
   );
 }
