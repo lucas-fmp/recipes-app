@@ -3,11 +3,26 @@ import PropTypes from 'prop-types';
 import MyContext from './MyContext';
 
 function MyProvider({ children }) {
-  const [searchedFoods, setSearchedFoods] = useState([]);
+  const [recipes, setRecipes] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [filteredRecipes, setFilteredRecipes] = useState([]);
+  const [title, setTitle] = useState('');
+  const [search, setSearch] = useState(false);
+  const [showHeader, setShowHeader] = useState(false);
 
   const value = {
-    setSearchedFoods,
-    searchedFoods,
+    recipes,
+    setRecipes,
+    categories,
+    setCategories,
+    filteredRecipes,
+    setFilteredRecipes,
+    title,
+    setTitle,
+    search,
+    setSearch,
+    showHeader,
+    setShowHeader,
   };
 
   return (
