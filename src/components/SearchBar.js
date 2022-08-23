@@ -16,7 +16,6 @@ function SearchBar() {
       history.push(`/foods/${data[0].idMeal}`);
     }
     if (data.length === 1 && title === 'drinks') {
-      console.log(data[0]);
       history.push(`/drinks/${data[0].idDrink}`);
     }
   };
