@@ -46,7 +46,7 @@ function Recipes() {
     setTitle(title);
     setShowHeader(true);
     setSearch(true);
-  }, []);
+  }, [path]);
 
   const redirect = (recipe) => {
     if (recipe.idMeal) {
@@ -144,7 +144,7 @@ function Recipes() {
 
   return (
     <div>
-      <Header title="Foods" />
+      <Header title={ title } />
       {
         renderFilterButtons()
       }

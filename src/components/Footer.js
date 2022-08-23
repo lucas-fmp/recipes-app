@@ -6,9 +6,7 @@ import '../styles/footer.css';
 
 function Footer() {
   return (
-
     <footer data-testid="footer">
-
       <Link to="/drinks">
         <img src={ drinkIcon } alt="drink" data-testid="drinks-bottom-btn" />
       </Link>
@@ -16,9 +14,7 @@ function Footer() {
       <Link to="/foods">
         <img src={ mealIcon } alt="meal" data-testid="food-bottom-btn" />
       </Link>
-
     </footer>
-
   );
 }
 
