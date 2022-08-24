@@ -24,12 +24,8 @@ function RecipeInProgress() {
     }
   };
   const returnEndpoint = () => {
-    if (typeFood === 'foods') {
-      return (`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
-    }
-    if (typeFood === 'drinks') {
-      return (`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`);
-    }
+    if (typeFood === 'foods') { return (`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`); }
+    if (typeFood === 'drinks') { return (`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`); }
   };
   useEffect(() => {
     async function requestForId() {
