@@ -9,6 +9,7 @@ function MyProvider({ children }) {
   const [title, setTitle] = useState('');
   const [search, setSearch] = useState(false);
   const [showHeader, setShowHeader] = useState(false);
+  const [recipeData, setRecipeData] = useState([]);
 
   const value = {
     recipes,
@@ -23,6 +24,8 @@ function MyProvider({ children }) {
     setSearch,
     showHeader,
     setShowHeader,
+    recipeData,
+    setRecipeData,
   };
 
   return (

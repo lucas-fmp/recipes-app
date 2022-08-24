@@ -23,23 +23,19 @@ function Header() {
           <h1 data-testid="page-title">{ newTitle }</h1>
           <button
             type="button"
-            data-testid="profile-top-btn"
             onClick={ sendProfile }
-            src={ profileIcon }
             alt="icone de perfil"
           >
-            Profile
+            <img src={ profileIcon } data-testid="profile-top-btn" alt="profile-icon" />
           </button>
           {
             search && (
               <button
                 type="button"
-                data-testid="search-top-btn"
                 onClick={ () => setShowSearchBar(!showSearchBar) }
-                src={ searchIcon }
                 alt="icone de pesquisa"
               >
-                Search
+                <img data-testid="search-top-btn" src={ searchIcon } alt="search-icon" />
               </button>
             )
           }
