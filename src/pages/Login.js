@@ -14,9 +14,6 @@ function Login() {
     localStorage.setItem('user', userObjJSON);
     localStorage.setItem('mealsToken', 1);
     localStorage.setItem('cocktailsToken', 1);
-    localStorage.setItem('inProgressRecipes', JSON.stringify([]));
-    localStorage.setItem('doneRecipes', JSON.stringify([]));
-    localStorage.setItem('favoriteRecipes', JSON.stringify([]));
     history.push('/foods');
   };
 

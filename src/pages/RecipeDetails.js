@@ -1,11 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Carousel } from 'react-bootstrap';
 import clipboardCopy from 'clipboard-copy';
 import MyContext from '../context/MyContext';
 import shareIcon from '../images/shareIcon.svg';
 import blackHeart from '../images/blackHeartIcon.svg';
 import whiteHeart from '../images/whiteHeartIcon.svg';
+import {
+  requestAllDrinks, requestAllFoods, requestDrinkById, requestFoodById,
+} from '../helpers/requestAPI';
+import {
+  verifyingDoneRecipes, verifyingFavoriteRecipes, verifyingInProgressRecipes,
+} from '../helpers/verifyLocalStorage';
 
 function RecipeDetails() {
   const history = useHistory();
@@ -15,108 +20,50 @@ function RecipeDetails() {
   const id = pathname.replace(/\D/g, ''); // Substitui o que não é número por uma string vazia;
   const maxRecipes = 6;
 
-  const { recipeData, setRecipeData } = useContext(MyContext);
+  const {
+    recipeData, setRecipeData, recomendationRecipes,
+    setRecomendationRecipes, urlVideo, setUrlVideo,
+  } = useContext(MyContext);
 
-  const [urlVideo, setUrlVideo] = useState('');
-  const [recomendationRecipes, setRecomendationRecipes] = useState([]);
+  const [linkCopied, setLinkCopied] = useState(false);
   const [renderButton, setRenderButton] = useState(true);
   const [inProgressRecipe, setInProgressRecipe] = useState(false);
-  const [linkCopied, setLinkCopied] = useState(false);
   const [isFavorited, setIsFavorited] = useState(false);
-
-  const fetchFoods = async () => {
-    const responseFoods = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
-    const dataFoods = await responseFoods.json();
-    setRecipeData(dataFoods.meals[0]);
-    setUrlVideo(dataFoods.meals[0].strYoutube.replace('watch?v=', 'embed/ '));
-
-    const responseDrinks = await fetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=');
-    const dataDrinks = await responseDrinks.json();
-    const slicedArrayDrinks = dataDrinks.drinks.slice(0, maxRecipes);
-    setRecomendationRecipes(slicedArrayDrinks);
-  };
-
-  const fetchDrinks = async () => {
-    const responseDrinks = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`);
-    const dataDrinks = await responseDrinks.json();
-    setRecipeData(dataDrinks.drinks[0]);
-
-    const responseFoods = await fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=');
-    const dataFoods = await responseFoods.json();
-    const slicedArrayFoods = dataFoods.meals.slice(0, maxRecipes);
-    setRecomendationRecipes(slicedArrayFoods);
-  };
 
   useEffect(() => {
     const fetchAPI = async () => {
       if (path === 'foods') {
-        fetchFoods();
+        const dataFood = await requestFoodById(id);
+        const dataDrinks = await requestAllDrinks();
+        setRecipeData(dataFood);
+        setUrlVideo(dataFood.strYoutube.replace('watch?v=', 'embed/ '));
+        setRecomendationRecipes(dataDrinks.slice(0, maxRecipes));
       }
 
       if (path === 'drinks') {
-        fetchDrinks();
+        const dataDrink = await requestDrinkById(id);
+        const dataFoods = await requestAllFoods();
+        setRecipeData(dataDrink);
+        setRecomendationRecipes(dataFoods.slice(0, maxRecipes));
       }
     };
     fetchAPI();
   }, []);
 
-  const verifyingDoneRecipes = () => {
-    const doneRecipes = JSON
-      .parse(localStorage.getItem('doneRecipes')) !== null
-      && JSON.parse(localStorage.getItem('doneRecipes'));
-
-    const doneRecipesFilter = doneRecipes !== false
-      ? doneRecipes.filter((recipe) => recipe.id === id) : [];
-
-    if (doneRecipesFilter.length !== 0) {
-      setRenderButton(false);
-    }
-  };
-
-  const verifyingInProgressRecipes = () => {
-    const inProgressRecipes = JSON
-      .parse(localStorage.getItem('inProgressRecipes')) !== null
-    && JSON.parse(localStorage.getItem('inProgressRecipes'));
-
-    if (path === 'foods') {
-      const inProgressRecipesObj = inProgressRecipes !== false
-        ? inProgressRecipes.meals : {};
-      const verifyId = !!inProgressRecipesObj[id];
-      setInProgressRecipe(verifyId);
-    }
-
-    if (path === 'drinks') {
-      const inProgressRecipesObj = inProgressRecipes !== false
-        ? inProgressRecipes.cocktails : {};
-      const verifyId = !!inProgressRecipesObj[id];
-      setInProgressRecipe(verifyId);
-    }
-  };
-
-  const verifyingFavoriteRecipes = () => {
-    const favoriteRecipes = JSON
-      .parse(localStorage.getItem('favoriteRecipes')) !== null
-      && JSON.parse(localStorage.getItem('favoriteRecipes'));
-
-    const favoriteRecipesFilter = favoriteRecipes !== false
-      ? favoriteRecipes.filter((recipe) => recipe.id === id) : [];
-
-    if (favoriteRecipesFilter.length !== 0) {
-      setIsFavorited(true);
-    }
-  };
-
   useEffect(() => {
-    verifyingDoneRecipes();
-    verifyingInProgressRecipes();
-    verifyingFavoriteRecipes();
+    const verifyLocalStorage = () => {
+      setRenderButton(verifyingDoneRecipes(id));
+      setInProgressRecipe(verifyingInProgressRecipes(id, path));
+      setIsFavorited(verifyingFavoriteRecipes(id));
+    };
+    verifyLocalStorage();
   }, [recipeData]);
 
   const recomendationCards = () => {
     if (path === 'foods') {
       return (
         recomendationRecipes.map((recomendation, index) => (
-          <Carousel.Item
+          <div
             key={ index }
             data-testid={ `${index}-recomendation-card` }
             className="teste"
@@ -132,7 +79,7 @@ function RecipeDetails() {
               {recomendation.strDrink}
             </h4>
             <p>{recomendation.strAlcoholic}</p>
-          </Carousel.Item>
+          </div>
         ))
       );
     }
@@ -160,19 +107,32 @@ function RecipeDetails() {
   const addFavoriteRecipe = () => {
     const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes')) !== null
       ? JSON.parse(localStorage.getItem('favoriteRecipes')) : [];
-    const favoriteRecipeObj = {
-      id,
-      type: path.replace('s', ''),
-      nationality: recipeData.strArea ? recipeData.strArea : '',
-      category: recipeData.strCategory ? recipeData.strCategory : '',
-      alcoholicOrNot: recipeData.strAlcoholic ? recipeData.strAlcoholic : '',
-      name: recipeData.strDrink ? recipeData.strDrink : recipeData.strMeal,
-      image: recipeData.strDrinkThumb
-        ? recipeData.strDrinkThumb : recipeData.strMealThumb,
-    };
-    localStorage
-      .setItem('favoriteRecipes', JSON
-        .stringify([...favoriteRecipes, favoriteRecipeObj]));
+
+    const favoriteRecipesFilter = favoriteRecipes !== false
+      ? favoriteRecipes.filter((recipe) => recipe.id === id) : [];
+
+    if (favoriteRecipesFilter.length === 0) {
+      const favoriteRecipeObj = {
+        id,
+        type: path.replace('s', ''),
+        nationality: recipeData.strArea ? recipeData.strArea : '',
+        category: recipeData.strCategory ? recipeData.strCategory : '',
+        alcoholicOrNot: recipeData.strAlcoholic ? recipeData.strAlcoholic : '',
+        name: recipeData.strDrink ? recipeData.strDrink : recipeData.strMeal,
+        image: recipeData.strDrinkThumb
+          ? recipeData.strDrinkThumb : recipeData.strMealThumb,
+      };
+
+      localStorage
+        .setItem('favoriteRecipes', JSON
+          .stringify([...favoriteRecipes, favoriteRecipeObj]));
+    }
+    if (favoriteRecipesFilter.length !== 0) {
+      const removeFavorite = favoriteRecipes.filter((recipe) => recipe.id !== id);
+      localStorage
+        .setItem('favoriteRecipes', JSON
+          .stringify(removeFavorite));
+    }
   };
 
   const recipeDetailsContent = () => {
@@ -251,11 +211,9 @@ function RecipeDetails() {
             />
           )
         }
-        <Carousel>
-          {
-            recomendationCards()
-          }
-        </Carousel>
+        {
+          recomendationCards()
+        }
         {
           renderButton === true && (
             <button
