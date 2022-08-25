@@ -9,6 +9,13 @@ function MyProvider({ children }) {
   const [title, setTitle] = useState('');
   const [search, setSearch] = useState(false);
   const [showHeader, setShowHeader] = useState(false);
+  const [recipeData, setRecipeData] = useState([]);
+  const [urlVideo, setUrlVideo] = useState('');
+  const [recomendationRecipes, setRecomendationRecipes] = useState([]);
+  const [renderButton, setRenderButton] = useState(true);
+  const [inProgressRecipe, setInProgressRecipe] = useState(false);
+  const [isFavorited, setIsFavorited] = useState(false);
+  const [recipeId, setRecipeId] = useState('');
 
   const value = {
     recipes,
@@ -23,6 +30,20 @@ function MyProvider({ children }) {
     setSearch,
     showHeader,
     setShowHeader,
+    recipeData,
+    setRecipeData,
+    urlVideo,
+    setUrlVideo,
+    recomendationRecipes,
+    setRecomendationRecipes,
+    renderButton,
+    setRenderButton,
+    inProgressRecipe,
+    setInProgressRecipe,
+    isFavorited,
+    setIsFavorited,
+    recipeId,
+    setRecipeId,
   };
 
   return (
