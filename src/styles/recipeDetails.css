@@ -1,0 +1,8 @@
+.recomendations-container {
+  overflow: hidden
+}
+
+.teste {
+  display: flex;
+  overflow-x: scroll;
+}

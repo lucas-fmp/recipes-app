@@ -11,6 +11,7 @@ import {
 import {
   verifyingDoneRecipes, verifyingFavoriteRecipes, verifyingInProgressRecipes,
 } from '../helpers/verifyLocalStorage';
+import '../styles/recipeDetails.css';
 
 function RecipeDetails() {
   const history = useHistory();
@@ -66,12 +67,11 @@ function RecipeDetails() {
           <div
             key={ index }
             data-testid={ `${index}-recomendation-card` }
-            className="teste"
           >
             <img
               src={ recomendation.strDrinkThumb }
               alt={ recomendation.strDrink }
-              className="d-block w-20"
+              width={ 180 }
             />
             <h4
               data-testid={ `${index}-recomendation-title` }
@@ -90,7 +90,7 @@ function RecipeDetails() {
             <img
               src={ recomendation.strMealThumb }
               alt={ recomendation.strMeal }
-              className="d-block w-20"
+              width={ 180 }
             />
             <h4
               data-testid={ `${index}-recomendation-title` }
@@ -156,7 +156,7 @@ function RecipeDetails() {
 
     return (
       <>
-        <img src={ thumb } data-testid="recipe-photo" alt={ name } />
+        <img src={ thumb } data-testid="recipe-photo" alt={ name } width={ 400 } />
         <h1 data-testid="recipe-title">{name}</h1>
         <h4 data-testid="recipe-category">{info}</h4>
         <ul>
@@ -211,9 +211,13 @@ function RecipeDetails() {
             />
           )
         }
-        {
-          recomendationCards()
-        }
+        <div className="recomendations-container">
+          <div className="teste">
+            {
+              recomendationCards()
+            }
+          </div>
+        </div>
         {
           renderButton === true && (
             <button
