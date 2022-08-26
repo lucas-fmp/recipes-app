@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import clipboardCopy from 'clipboard-copy';
 import Header from '../components/Header';
 import MyContext from '../context/MyContext';
@@ -12,9 +12,9 @@ function FavoriteRecipes() {
   const [allRecipes, setAllRecipes] = useState([]);
   const [linkCopied, setLinkCopied] = useState(false);
 
-  const history = useHistory();
-  const { location: { pathname } } = history;
-  const id = pathname.replace(/\D/g, ''); // Substitui o que não é número por uma string vazia;
+  // const history = useHistory();
+  // const { location: { pathname } } = history;
+  // const id = pathname.replace(/\D/g, ''); // Substitui o que não é número por uma string vazia;
 
   useEffect(() => {
     const listRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
@@ -29,122 +29,116 @@ function FavoriteRecipes() {
     setSearch(false);
   }, []);
 
-  const deleteFavorites = () => {
-    const filterRecipes = recipes.filter((recipe) => recipe.id !== id);
+  const deleteFavorites = (recipeId) => {
+    const filterRecipes = recipes.filter((recipe) => recipe.id !== recipeId);
     localStorage.setItem('favoriteRecipes', JSON.stringify(filterRecipes));
     setRecipes(filterRecipes);
   };
 
-  const renderRecipesFavorites = () => {
-    recipes.map((recipe, index) => {
-      if (recipe.type === 'food') {
-        return (
-          <div
-            key={ index }
-          >
-            <Link to={ `/foods/${recipe.id}` }>
-              <img
-                src={ recipe.image }
-                alt={ `Foto da comida ${recipe.name}` }
-                data-testid={ `${index}-horizontal-image` }
-                width="300px"
-                height="300px"
-              />
-            </Link>
-            <p
-              data-testid={ `${index}-horizontal-top-text` }
-            >
-              {`${recipe.nationality} : ${recipe.category}`}
-            </p>
-            <Link to={ `/foods/${recipe.id}` }>
-              <p data-testid={ `${index}-horizontal-name` }>{recipe.name}</p>
-            </Link>
-            {
-              linkCopied === true && <p>Link copied!</p>
-            }
-            <button
-              type="button"
-              onClick={ () => {
-                clipboardCopy(`http://localhost:3000${recipe.id}`);
-                setLinkCopied(true);
-              } }
-            >
-              <img
-                src={ shareIcon }
-                alt="Botão de compartilhar"
-                data-testid={ `${index}-horizontal-share-btn` }
-              />
-            </button>
-            <button
-              type="button"
-              onClick={ () => deleteFavorites() }
-            >
-              <img
-                src={ blackHeart }
-                alt="Botão de desfavoritar"
-                data-testid={ `${index}-horizontal-favorite-btn` }
-              />
-            </button>
-          </div>
+  const renderRecipesFavorites = () => recipes.map((recipe, index) => (
+    recipe.type === 'food' ? (
+      <div
+        key={ index }
+      >
+        <Link to={ `/foods/${recipe.id}` }>
+          <img
+            src={ recipe.image }
+            alt={ `Foto da comida ${recipe.name}` }
+            data-testid={ `${index}-horizontal-image` }
+            width="300px"
+            height="300px"
+          />
+        </Link>
+        <p
+          data-testid={ `${index}-horizontal-top-text` }
+        >
+          {`${recipe.nationality} - ${recipe.category}`}
+        </p>
+        <Link to={ `/foods/${recipe.id}` }>
+          <p data-testid={ `${index}-horizontal-name` }>{recipe.name}</p>
+        </Link>
+        {
+          linkCopied === true && <p>Link copied!</p>
+        }
+        <button
+          type="button"
+          onClick={ () => {
+            clipboardCopy(`http://localhost:3000/${recipe.type}s/${recipe.id}`);
+            setLinkCopied(true);
+          } }
+        >
+          <img
+            src={ shareIcon }
+            alt="Botão de compartilhar"
+            data-testid={ `${index}-horizontal-share-btn` }
+          />
+        </button>
+        <button
+          type="button"
+          onClick={ () => deleteFavorites(recipe.id) }
+        >
+          <img
+            src={ blackHeart }
+            alt="Botão de desfavoritar"
+            data-testid={ `${index}-horizontal-favorite-btn` }
+          />
+        </button>
+      </div>
 
-        );
-      }
-      if (recipe.type === 'drink') {
-        return (
-          <div
-            key={ index }
-          >
-            <Link to={ `/drinks/${recipe.id}` }>
-              <img
-                src={ recipe.image }
-                alt={ `Foto da comida ${recipe.name}` }
-                data-testid={ `${index}-horizontal-image` }
-                width="300px"
-                height="300px"
-              />
-            </Link>
-            <p
-              data-testid={ `${index}-horizontal-top-text` }
-            >
-              { recipe.alcoholicOrNot }
-            </p>
-            <Link to={ `/drinks/${recipe.id}` }>
-              <p data-testid={ `${index}-horizontal-name` }>{recipe.name}</p>
-            </Link>
-            {
-              linkCopied === true && <p>Link copied!</p>
-            }
-            <button
-              type="button"
-              onClick={ () => {
-                clipboardCopy(`http://localhost:3000${recipe.id}`);
-                setLinkCopied(true);
-              } }
-            // CRIAR UM ESTADO PARA VIR A MSG, COMECANDO COMO FALSE, E VINDO COMO TRUE
-            // FUNÇÃO DE TRAZER A MSG DE LINK COPIADO - VER NO README
-            >
-              <img
-                src={ shareIcon }
-                alt="Botão de compartilhar"
-                data-testid={ `${index}-horizontal-share-btn` }
-              />
-            </button>
-            <button
-              type="button"
-              onClick={ () => deleteFavorites() }
-            // FUNÇAO DE ONCLICK PARA DESFAVORITAR
-            >
-              <img
-                src={ blackHeart }
-                alt="Botão de desfavoritar"
-                data-testid={ `${index}-horizontal-favorite-btn` }
-              />
-            </button>
-          </div>
-        );
-      }
-    });
-  };
+    ) : (
+
+      <div
+        key={ index }
+      >
+        <Link to={ `/drinks/${recipe.id}` }>
+          <img
+            src={ recipe.image }
+            alt={ `Foto da comida ${recipe.name}` }
+            data-testid={ `${index}-horizontal-image` }
+            width="300px"
+            height="300px"
+          />
+        </Link>
+        <p
+          data-testid={ `${index}-horizontal-top-text` }
+        >
+          { recipe.alcoholicOrNot }
+        </p>
+        <Link to={ `/drinks/${recipe.id}` }>
+          <p data-testid={ `${index}-horizontal-name` }>{recipe.name}</p>
+        </Link>
+        {
+          linkCopied === true && <p>Link copied!</p>
+        }
+        <button
+          type="button"
+          onClick={ () => {
+            clipboardCopy(`http://localhost:3000${recipe.id}`);
+            setLinkCopied(true);
+          } }
+          // CRIAR UM ESTADO PARA VIR A MSG, COMECANDO COMO FALSE, E VINDO COMO TRUE
+          // FUNÇÃO DE TRAZER A MSG DE LINK COPIADO - VER NO README
+        >
+          <img
+            src={ shareIcon }
+            alt="Botão de compartilhar"
+            data-testid={ `${index}-horizontal-share-btn` }
+          />
+        </button>
+        <button
+          type="button"
+          onClick={ () => deleteFavorites(recipe.id) }
+          // FUNÇAO DE ONCLICK PARA DESFAVORITAR
+        >
+          <img
+            src={ blackHeart }
+            alt="Botão de desfavoritar"
+            data-testid={ `${index}-horizontal-favorite-btn` }
+          />
+        </button>
+      </div>
+    )
+  ));
 
   return (
     <div>
