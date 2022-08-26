@@ -5,8 +5,8 @@ import { Route, Switch } from 'react-router-dom';
 import Recipes from './pages/Recipes';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
-import DoneRecipes from './pages/DoneRecipes';
 import FavoriteRecipes from './pages/FavoriteRecipes';
+import DoneRecipes from './pages/DoneRecipes';
 import RecipeDetails from './pages/RecipeDetails';
 import RecipeInProgress from './pages/RecipeInProgress';
 
