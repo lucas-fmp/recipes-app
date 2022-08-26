@@ -4,9 +4,9 @@ import whiteHeart from '../images/whiteHeartIcon.svg';
 
 const isFavoritedButton = (favorite) => {
   if (favorite === false) {
-    return (<img src={ whiteHeart } alt="favorite icon" data-testid="favorite-btn" />);
+    return (<img src={ whiteHeart } alt="white heart" data-testid="favorite-btn" />);
   } if (favorite === true) {
-    return (<img src={ blackHeart } alt="favorite icon" data-testid="favorite-btn" />);
+    return (<img src={ blackHeart } alt="black heart" data-testid="favorite-btn" />);
   }
 };
 

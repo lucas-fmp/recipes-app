@@ -14,7 +14,8 @@ function Profile() {
     setSearch(false);
   }, []);
 
-  const getEmail = JSON.parse(localStorage.getItem('user'));
+  const getEmail = JSON
+    .parse(localStorage.getItem('user')) ? JSON.parse(localStorage.getItem('user')) : '';
 
   const routeDoneRecipes = () => {
     history.push('/done-recipes');
