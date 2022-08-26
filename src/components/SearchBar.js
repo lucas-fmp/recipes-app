@@ -54,7 +54,6 @@ function SearchBar() {
       try {
         const response = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?f=${searchInput}`);
         const data = await response.json();
-        console.log(typeof data);
         const dataFiltered = data.meals.slice(0, maxRecipes);
         setFilteredRecipes(dataFiltered);
         verificaData(dataFiltered);
