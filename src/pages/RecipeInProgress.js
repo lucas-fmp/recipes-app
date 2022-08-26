@@ -76,7 +76,7 @@ function RecipeInProgress() {
   };
   const finalizaRecipe = () => {
     saveRecipe(requestedFood[0], id, path);
-    history.push('/done-recipe');
+    history.push('/done-recipes');
   };
   useEffect(() => { getIngredients(); }, [requestedFood]);
   const checkboxClick = ({ target }) => {
