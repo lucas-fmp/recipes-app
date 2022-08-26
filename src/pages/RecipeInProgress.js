@@ -6,8 +6,8 @@ import { requestDrinkById, requestFoodById } from '../helpers/requestAPI';
 import addFavoriteRecipe from '../helpers/saveFavorites';
 import saveRecipe from '../helpers/saveDoneRecipe';
 import shareIcon from '../images/shareIcon.svg';
-import isFavoritedButton from '../helpers/isFvaoriteButton';
-import verificaFavoriteButton from '../helpers/verificaFavoriteButton';
+import isFavoritedButton from '../helpers/isFavoriteButton';
+import { verifyingFavoriteRecipes } from '../helpers/verifyLocalStorage';
 
 function RecipeInProgress() {
   const history = useHistory();
@@ -42,7 +42,7 @@ function RecipeInProgress() {
       }
     };
     fetchAPI();
-    setIsFavorited(verificaFavoriteButton(id));
+    setIsFavorited(verifyingFavoriteRecipes(id));
     const array = localStorage.getItem('CheckboxIds');
     const arrayParsed = JSON.parse(array);
     if (arrayParsed !== null && (arrayParsed.length > ingredientsFiltreds.length)) {
@@ -54,9 +54,7 @@ function RecipeInProgress() {
     }
   }, []);
   const getIngredients = async () => {
-    if (requestedFood[0] === undefined) {
-      console.log('sei la');
-    } else if (requestedFood[0] !== undefined) {
+    if (requestedFood[0] !== undefined) {
       const entradas = Object.entries(requestedFood[0]);
       const ingredients = entradas.filter(
         (e) => e[0].includes('strIngredient') && (e[1] !== null && e[1].length > 1),
@@ -76,7 +74,7 @@ function RecipeInProgress() {
   };
   const finalizaRecipe = () => {
     saveRecipe(requestedFood[0], id, path);
-    history.push('/done-recipe');
+    history.push('/done-recipes');
   };
   useEffect(() => { getIngredients(); }, [requestedFood]);
   const checkboxClick = ({ target }) => {

@@ -3,8 +3,6 @@ import { useHistory } from 'react-router-dom';
 import clipboardCopy from 'clipboard-copy';
 import MyContext from '../context/MyContext';
 import shareIcon from '../images/shareIcon.svg';
-import blackHeart from '../images/blackHeartIcon.svg';
-import whiteHeart from '../images/whiteHeartIcon.svg';
 import {
   requestAllDrinks, requestAllFoods, requestDrinkById, requestFoodById,
 } from '../helpers/requestAPI';
@@ -12,6 +10,8 @@ import {
   verifyingDoneRecipes, verifyingFavoriteRecipes, verifyingInProgressRecipes,
 } from '../helpers/verifyLocalStorage';
 import '../styles/recipeDetails.css';
+import addFavoriteRecipe from '../helpers/saveFavorites';
+import isFavoritedButton from '../helpers/isFavoriteButton';
 
 function RecipeDetails() {
   const history = useHistory();
@@ -104,37 +104,6 @@ function RecipeDetails() {
     }
   };
 
-  const addFavoriteRecipe = () => {
-    const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes')) !== null
-      ? JSON.parse(localStorage.getItem('favoriteRecipes')) : [];
-
-    const favoriteRecipesFilter = favoriteRecipes !== false
-      ? favoriteRecipes.filter((recipe) => recipe.id === id) : [];
-
-    if (favoriteRecipesFilter.length === 0) {
-      const favoriteRecipeObj = {
-        id,
-        type: path.replace('s', ''),
-        nationality: recipeData.strArea ? recipeData.strArea : '',
-        category: recipeData.strCategory ? recipeData.strCategory : '',
-        alcoholicOrNot: recipeData.strAlcoholic ? recipeData.strAlcoholic : '',
-        name: recipeData.strDrink ? recipeData.strDrink : recipeData.strMeal,
-        image: recipeData.strDrinkThumb
-          ? recipeData.strDrinkThumb : recipeData.strMealThumb,
-      };
-
-      localStorage
-        .setItem('favoriteRecipes', JSON
-          .stringify([...favoriteRecipes, favoriteRecipeObj]));
-    }
-    if (favoriteRecipesFilter.length !== 0) {
-      const removeFavorite = favoriteRecipes.filter((recipe) => recipe.id !== id);
-      localStorage
-        .setItem('favoriteRecipes', JSON
-          .stringify(removeFavorite));
-    }
-  };
-
   const recipeDetailsContent = () => {
     const thumb = recipeData
       .strMealThumb ? recipeData.strMealThumb : recipeData.strDrinkThumb;
@@ -189,15 +158,11 @@ function RecipeDetails() {
           type="button"
           onClick={ () => {
             setIsFavorited(!isFavorited);
-            addFavoriteRecipe();
+            addFavoriteRecipe(recipeData, id, path);
           } }
         >
           {
-            isFavorited === false ? (
-              <img src={ whiteHeart } alt="favorite icon" data-testid="favorite-btn" />
-            ) : (
-              <img src={ blackHeart } alt="favorite icon" data-testid="favorite-btn" />
-            )
+            isFavoritedButton(isFavorited)
           }
         </button>
         {
