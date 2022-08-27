@@ -18,7 +18,7 @@ const saveRecipe = (recipeData, id, path) => {
       image: recipeData.strDrinkThumb
         ? recipeData.strDrinkThumb : recipeData.strMealThumb,
       doneDate: data,
-      tags: recipeData.strTags,
+      tags: recipeData.strTags ? recipeData.strTags.split(',') : [],
     };
 
     localStorage
