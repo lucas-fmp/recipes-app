@@ -113,6 +113,7 @@ function RecipeInProgress() {
                 (e, index) => (
                   <li key={ e } data-testid={ `${index}-ingredient-step` }>
                     <input
+                      data-testid={ `${index}-checkbox` }
                       type="checkbox"
                       onChange={ () => habilitaButton() }
                       id={ index }
@@ -145,7 +146,7 @@ function RecipeInProgress() {
               data-testid="finish-recipe-btn"
               type="button"
               disabled={ habilitaFinish }
-              onClick={ () => finalizaRecipe() }
+              onClick={ finalizaRecipe }
             >
               Finish Recipe
             </button>
@@ -219,8 +220,10 @@ function RecipeInProgress() {
   useEffect(() => {
     const checks = localStorage.getItem('CheckboxIds');
     const arrayJson = JSON.parse(checks);
+    const newArray = arrayJson.length > ingredientsFiltreds.length ? [] : arrayJson;
+    localStorage.setItem('CheckboxIds', JSON.stringify([]));
     if (arrayJson[0] !== undefined || arrayJson[0] !== null) {
-      arrayJson.forEach((e) => {
+      newArray.forEach((e) => {
         const item = document.getElementById(e);
         item.setAttribute('checked', true);
         item.value = 'checked';

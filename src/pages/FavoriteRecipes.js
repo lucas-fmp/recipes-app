@@ -110,7 +110,7 @@ function FavoriteRecipes() {
         <button
           type="button"
           onClick={ () => {
-            clipboardCopy(`http://localhost:3000${recipe.id}`);
+            clipboardCopy(`http://localhost:3000/${recipe.type}s/${recipe.id}`);
             setLinkCopied(true);
           } }
           // CRIAR UM ESTADO PARA VIR A MSG, COMECANDO COMO FALSE, E VINDO COMO TRUE
