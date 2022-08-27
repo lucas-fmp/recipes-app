@@ -173,6 +173,7 @@ function RecipeInProgress() {
                 (e, index) => (
                   <li key={ index } data-testid={ `${index}-ingredient-step` }>
                     <input
+                      data-testid={ `${index}-checkbox` }
                       type="checkbox"
                       onChange={ () => habilitaButton() }
                       id={ index }
