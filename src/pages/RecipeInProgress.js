@@ -54,9 +54,7 @@ function RecipeInProgress() {
     }
   }, []);
   const getIngredients = async () => {
-    if (requestedFood[0] === undefined) {
-      console.log('sei la');
-    } else if (requestedFood[0] !== undefined) {
+    if (requestedFood[0] !== undefined) {
       const entradas = Object.entries(requestedFood[0]);
       const ingredients = entradas.filter(
         (e) => e[0].includes('strIngredient') && (e[1] !== null && e[1].length > 1),
@@ -175,6 +173,7 @@ function RecipeInProgress() {
                 (e, index) => (
                   <li key={ index } data-testid={ `${index}-ingredient-step` }>
                     <input
+                      data-testid={ `${index}-checkbox` }
                       type="checkbox"
                       onChange={ () => habilitaButton() }
                       id={ index }

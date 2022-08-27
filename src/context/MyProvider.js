@@ -16,6 +16,7 @@ function MyProvider({ children }) {
   const [inProgressRecipe, setInProgressRecipe] = useState(false);
   const [isFavorited, setIsFavorited] = useState(false);
   const [recipeId, setRecipeId] = useState('');
+  const [doneRecipes, setDoneRecipes] = useState([]);
 
   const value = {
     recipes,
@@ -44,6 +45,8 @@ function MyProvider({ children }) {
     setIsFavorited,
     recipeId,
     setRecipeId,
+    doneRecipes,
+    setDoneRecipes,
   };
 
   return (

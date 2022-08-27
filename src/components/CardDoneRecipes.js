@@ -1,40 +1,39 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import clipboardCopy from 'clipboard-copy';
 import { Link } from 'react-router-dom';
 import shareIcon from '../images/shareIcon.svg';
+import MyContext from '../context/MyContext';
 
 function CardDoneRecipes() {
   const [linkCopied, setLinkCopied] = useState(false);
-  const doneRecipes = localStorage.getItem('doneRecipes')
-    ? JSON.parse(localStorage.getItem('doneRecipes')) : [];
+
+  const { doneRecipes } = useContext(MyContext);
 
   return (
-
     <div>
-      {/* {console.log(doneRecipes[0].tags)} */}
-
       {
-        doneRecipes.map((item, index) => (
+        doneRecipes.map((recipe, index) => (
           <div key={ index }>
             <div>
-              <Link to={ `/${item.type}s/${item.id}` }>
+              <Link to={ `/${recipe.type}s/${recipe.id}` }>
                 <img
-                  src={ item.image }
-                  alt={ item.name }
+                  src={ recipe.image }
+                  alt={ recipe.name }
                   data-testid={ `${index}-horizontal-image` }
+                  width={ 400 }
                 />
               </Link>
             </div>
 
             <div>
-              {item.type === 'food' && (
+              {recipe.type === 'food' && (
                 <h4 data-testid={ `${index}-horizontal-top-text` }>
-                  {`${item.nationality} - ${item.category}`}
+                  {`${recipe.nationality} - ${recipe.category}`}
                 </h4>
               )}
-              {item.type === 'drink' && (
+              {recipe.type === 'drink' && (
                 <h4 data-testid={ `${index}-horizontal-top-text` }>
-                  {item.alcoholicOrNot}
+                  {recipe.alcoholicOrNot}
                 </h4>
               )}
 
@@ -45,7 +44,7 @@ function CardDoneRecipes() {
               <button
                 type="button"
                 onClick={ () => {
-                  const url = `http://localhost:3000/${item.type}s/${item.id}`;
+                  const url = `http://localhost:3000/${recipe.type}s/${recipe.id}`;
                   clipboardCopy(url);
                   setLinkCopied(true);
                 } }
@@ -58,25 +57,25 @@ function CardDoneRecipes() {
               </button>
             </div>
 
-            <Link to={ `/${item.type}s/${item.id}` }>
+            <Link to={ `/${recipe.type}s/${recipe.id}` }>
               <h3 data-testid={ `${index}-horizontal-name` }>
-                {item.name }
+                {recipe.name }
               </h3>
             </Link>
 
             <p data-testid={ `${index}-horizontal-done-date` }>
-              {`Done in: ${item.doneDate}`}
+              {`Done in: ${recipe.doneDate}`}
             </p>
 
-            {/* {
-              item.tags && item.tags.map((tag) => (
+            {
+              recipe.tags && recipe.tags.map((tag) => (
                 <h5
                   data-testid={ `${index}-${tag}-horizontal-tag` }
                   key={ `${index}-${tag}` }
                 >
                   {tag}
                 </h5>))
-            } */}
+            }
 
           </div>
         ))
