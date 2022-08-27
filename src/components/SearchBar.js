@@ -21,7 +21,7 @@ function SearchBar() {
   };
 
   const noFoods = () => {
-    alert('Sorry, we haven\'t found any recipes for these filters.');
+    global.alert('Sorry, we haven\'t found any recipes for these filters.');
   };
 
   const searchFoods = async () => {
@@ -48,7 +48,7 @@ function SearchBar() {
       }
     }
     if (radioId === firstLetter && searchInput.length > 1) {
-      alert('Your search must have only 1 (one) character');
+      global.alert('Your search must have only 1 (one) character');
     }
     if (radioId === firstLetter && searchInput.length === 1) {
       try {
@@ -86,7 +86,7 @@ function SearchBar() {
       }
     }
     if (radioId === firstLetter && searchInput.length > 1) {
-      alert('Your search must have only 1 (one) character');
+      global.alert('Your search must have only 1 (one) character');
     }
     if (radioId === firstLetter && searchInput.length === 1) {
       try {

@@ -12,13 +12,10 @@ function FavoriteRecipes() {
   const [allRecipes, setAllRecipes] = useState([]);
   const [linkCopied, setLinkCopied] = useState(false);
 
-  // const history = useHistory();
-  // const { location: { pathname } } = history;
-  // const id = pathname.replace(/\D/g, ''); // Substitui o que não é número por uma string vazia;
-
   useEffect(() => {
-    const listRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
-    console.log(listRecipes);
+    const listRecipes = JSON
+      .parse(localStorage.getItem('favoriteRecipes'))
+      ? JSON.parse(localStorage.getItem('favoriteRecipes')) : [];
     setRecipes(listRecipes);
     setAllRecipes(listRecipes);
   }, []);

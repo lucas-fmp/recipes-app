@@ -5,9 +5,10 @@ import App from '../App';
 import MyProvider from '../context/MyProvider';
 import blackHeart from '../images/blackHeartIcon.svg';
 import whiteHeart from '../images/whiteHeartIcon.svg';
+import userEvent from '@testing-library/user-event';
 
 describe('The Recipes Details page', () => {
-  it('', async () => {
+  it('contain 6 recomendation cards of foods', async () => {
     const { history } = renderWithRouter(
       <MyProvider>
         <App />
@@ -20,7 +21,7 @@ describe('The Recipes Details page', () => {
     expect(recomendationCards).toHaveLength(6);
   });
 
-  it('', async () => {
+  it('contain 6 recomendation cards of drinks', async () => {
     const { history } = renderWithRouter(
       <MyProvider>
         <App />
@@ -33,7 +34,7 @@ describe('The Recipes Details page', () => {
     expect(recomendationCards).toHaveLength(6);
   })
 
-  it('', async () => {
+  it('changes the favorite button icon', async () => {
     const { history } = renderWithRouter(
       <MyProvider>
         <App />
@@ -48,7 +49,7 @@ describe('The Recipes Details page', () => {
     expect(favoriteButton).toHaveAttribute('src', blackHeart);
   });
 
-  it('', async () => {
+  it('start a recipe correctly', async () => {
     const { history } = renderWithRouter(
       <MyProvider>
         <App />
@@ -63,7 +64,7 @@ describe('The Recipes Details page', () => {
     expect(history.location.pathname).toBe('/foods/52977/in-progress');
   });
 
-  it('', async () => {
+  it('copy the text correctly', async () => {
     const { history } = renderWithRouter(
       <MyProvider>
         <App />
@@ -81,6 +82,6 @@ describe('The Recipes Details page', () => {
     const shareButton = await screen.findByTestId('share-btn');
     expect(shareButton).toBeInTheDocument();
     userEvent.click(shareButton);
-    expect(window.navigator.clipboard.writeText).toHaveBeenCalledWith('http://localhost:3000/foods/52977')
+    expect(window.navigator.clipboard.writeText).toHaveBeenCalledWith('http://localhost:3000/foods/52977');
   });
 });
