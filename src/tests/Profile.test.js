@@ -10,8 +10,6 @@ const mockEmail = {email : 'teste@trybe.com' };
 localStorage.setItem('user', JSON.stringify(mockEmail));
 
 describe('Test the Profile screen', () => {
- 
-
      it(`Correctly displays the registered user's email`, () => {
 
         const { history } = renderWithRouter(
@@ -25,8 +23,6 @@ describe('Test the Profile screen', () => {
         
         const getEmail = screen.getByTestId('profile-email');
         expect(getEmail).toBeInTheDocument();
-
-
     });
 
 

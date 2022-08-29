@@ -12,13 +12,10 @@ function FavoriteRecipes() {
   const [allRecipes, setAllRecipes] = useState([]);
   const [linkCopied, setLinkCopied] = useState(false);
 
-  // const history = useHistory();
-  // const { location: { pathname } } = history;
-  // const id = pathname.replace(/\D/g, ''); // Substitui o que não é número por uma string vazia;
-
   useEffect(() => {
-    const listRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
-    console.log(listRecipes);
+    const listRecipes = JSON
+      .parse(localStorage.getItem('favoriteRecipes'))
+      ? JSON.parse(localStorage.getItem('favoriteRecipes')) : [];
     setRecipes(listRecipes);
     setAllRecipes(listRecipes);
   }, []);
@@ -113,7 +110,7 @@ function FavoriteRecipes() {
         <button
           type="button"
           onClick={ () => {
-            clipboardCopy(`http://localhost:3000${recipe.id}`);
+            clipboardCopy(`http://localhost:3000/${recipe.type}s/${recipe.id}`);
             setLinkCopied(true);
           } }
           // CRIAR UM ESTADO PARA VIR A MSG, COMECANDO COMO FALSE, E VINDO COMO TRUE

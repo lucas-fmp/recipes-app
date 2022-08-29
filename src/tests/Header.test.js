@@ -4,170 +4,258 @@ import userEvent from '@testing-library/user-event';
 import renderWithRouter from '../helpers/renderWithRouter';
 import App from '../App';
 import MyProvider from '../context/MyProvider';
+import { wait } from '@testing-library/user-event/dist/utils';
 
 describe ('testes do Header e SearchBar', () => {
-  test('se o header tem tudo e se a pesquisa por letra funciona', async () => {
+  it('send to the profile page when the profile button is clicked', async () => {
     const { history } = renderWithRouter(
       <MyProvider>
         <App />
       </MyProvider>
     );
 
-    const emailInput = screen.getByTestId('email-input');
-    const passwordInput = screen.getByTestId('password-input');
-    const submitButton = screen.getByTestId('login-submit-btn');
+    history.push('/foods');
 
-    userEvent.type(emailInput, 'teste@teste.com');
-    userEvent.type(passwordInput, 'senhateste');
-    userEvent.click(submitButton);
-
-    const title = screen.getAllByRole('heading', { name: /foods/i });
-    expect(title).toBeDefined();
-
-    const profileBUtton = screen.getByTestId(/profile-top-btn/i);
-    expect(profileBUtton).toBeDefined();
-
-    const showSearchBar = screen.getByTestId(/search-top-btn/i);
-    expect(showSearchBar).toBeDefined();
-
-    userEvent.click(showSearchBar);
-    const SearchBar = screen.getByTestId(/search-input/i);
-    expect(SearchBar).toBeDefined();
-
-    const radioIngredient = screen.getByTestId(/ingredient-search-radio/i);
-    const radioName = screen.getByTestId(/name-search-radio/i);
-    const radioLetter = screen.getByTestId(/first-letter-search-radio/i);
-    expect(radioIngredient).toBeDefined();
-    expect(radioName).toBeDefined();
-    expect(radioLetter).toBeDefined();
-
-    const searchButton = screen.getByTestId(/exec-search-btn/i);
-    expect(searchButton).toBeDefined();
-
-    userEvent.click(radioLetter);
-    userEvent.type('p', SearchBar);
-    userEvent.click(searchButton);
-
-    const mealCard = await screen.findByTestId('0-card-img');
-    expect(mealCard).toBeDefined();
+    const profileBtn = await screen.findByTestId('profile-top-btn');
+    userEvent.click(profileBtn);
+    expect(history.location.pathname).toBe('/profile');
   })
-})
 
-test('botão da pagina de perfil', () => {
-  const { history } = renderWithRouter(
-    <MyProvider>
-      <App />
-    </MyProvider>
-  );
+  it('redirect to the food detail page when only 1 recipe is filtered', async () => {
+    const { history } = renderWithRouter(
+      <MyProvider>
+        <App />
+      </MyProvider>
+    );
 
-  const emailInput = screen.getByTestId('email-input');
-  const passwordInput = screen.getByTestId('password-input');
-  const submitButton = screen.getByTestId('login-submit-btn');
+    history.push('/foods');
 
-  userEvent.type(emailInput, 'teste@teste.com');
-  userEvent.type(passwordInput, 'senhateste');
-  userEvent.click(submitButton);
+    const searchIcon = await screen.findByTestId('search-top-btn');
+    expect(searchIcon).toBeInTheDocument();
+    userEvent.click(searchIcon);
 
-  const profileButton = screen.getByTestId(/profile-top-btn/i)
-  userEvent.click(profileButton)
-  expect(history.location.pathname).toBe('/profile')
-})
+    const nameRadio = await screen.findByText(/Name/i);
+    expect(nameRadio).toBeInTheDocument();
+    userEvent.click(nameRadio);
 
-test('pesquisa por nome', async () => {
-  const { history } = renderWithRouter(
-    <MyProvider>
-      <App />
-    </MyProvider>
-  );
+    const inputText = await screen.findByTestId('search-input');
+    expect(inputText).toBeInTheDocument();
+    userEvent.type(inputText, 'Vegan Lasagna');
 
-  const emailInput = screen.getByTestId('email-input');
-  const passwordInput = screen.getByTestId('password-input');
-  const submitButton = screen.getByTestId('login-submit-btn');
+    const searchBtn = await screen.findByTestId('exec-search-btn');
+    expect(searchBtn).toBeInTheDocument();
+    userEvent.click(searchBtn);
 
-  userEvent.type(emailInput, 'teste@teste.com');
-  userEvent.type(passwordInput, 'senhateste');
-  userEvent.click(submitButton);
+    const recipePhoto = await screen.findByTestId('recipe-photo');
 
-  const showSearchBar = screen.getByTestId(/search-top-btn/i);
+    expect(recipePhoto).toBeInTheDocument();
+  });
 
-  userEvent.click(showSearchBar);
-  const SearchBar = screen.getByTestId(/search-input/i);
+  it('redirect to the drink detail page when only 1 recipe is filtered', async () => {
+    const { history } = renderWithRouter(
+      <MyProvider>
+        <App />
+      </MyProvider>
+    );
 
-  const radioName = screen.getByTestId(/name-search-radio/i);
+    history.push('/drinks');
 
-  const searchButton = screen.getByTestId(/exec-search-btn/i);
+    const searchIcon = await screen.findByTestId('search-top-btn');
+    expect(searchIcon).toBeInTheDocument();
+    userEvent.click(searchIcon);
 
-  userEvent.click(radioName);
-  userEvent.type('Chicken', SearchBar);
-  userEvent.click(searchButton);
+    const nameRadio = await screen.findByText(/Name/i);
+    expect(nameRadio).toBeInTheDocument();
+    userEvent.click(nameRadio);
 
-  const meal = await screen.findByTestId('0-card-img');
-  expect(meal).toBeDefined();
-})
+    const inputText = await screen.findByTestId('search-input');
+    expect(inputText).toBeInTheDocument();
+    userEvent.type(inputText, 'ABC');
 
-test('pesquisa pelo Ingrediente', async () => {
-  const { history } = renderWithRouter(
-    <MyProvider>
-      <App />
-    </MyProvider>
-  );
+    const searchBtn = await screen.findByTestId('exec-search-btn');
+    expect(searchBtn).toBeInTheDocument();
+    userEvent.click(searchBtn);
 
-  const emailInput = screen.getByTestId('email-input');
-  const passwordInput = screen.getByTestId('password-input');
-  const submitButton = screen.getByTestId('login-submit-btn');
+    const recipePhoto = await screen.findByTestId('recipe-photo');
 
-  userEvent.type(emailInput, 'teste@teste.com');
-  userEvent.type(passwordInput, 'senhateste');
-  userEvent.click(submitButton);
+    expect(recipePhoto).toBeInTheDocument();
+  });
 
-  const showSearchBar = screen.getByTestId(/search-top-btn/i);
+  it('redirect to the food detail page when only 1 recipe is filtered', async () => {
+    const { history } = renderWithRouter(
+      <MyProvider>
+        <App />
+      </MyProvider>
+    );
 
-  userEvent.click(showSearchBar);
-  const SearchBar = screen.getByTestId(/search-input/i);
+    history.push('/foods');
 
-  const radioIngredient = screen.getByTestId(/ingredient-search-radio/i);
+    const searchIcon = await screen.findByTestId('search-top-btn');
+    expect(searchIcon).toBeInTheDocument();
+    userEvent.click(searchIcon);
 
-  const searchButton = screen.getByTestId(/exec-search-btn/i);
+    const nameRadio = await screen.findByText(/Name/i);
+    expect(nameRadio).toBeInTheDocument();
+    userEvent.click(nameRadio);
 
-  userEvent.click(radioIngredient);
-  userEvent.type('pepper', SearchBar);
-  userEvent.click(searchButton);
+    const inputText = await screen.findByTestId('search-input');
+    expect(inputText).toBeInTheDocument();
+    userEvent.type(inputText, 'Vegan Lasagna');
 
-  const mealCard = await screen.findByTestId('0-card-img');
-  expect(mealCard).toBeDefined();
-})
+    const searchBtn = await screen.findByTestId('exec-search-btn');
+    expect(searchBtn).toBeInTheDocument();
+    userEvent.click(searchBtn);
 
-test('pagina de drinks por ingredientes', async () => {
-  const { history } = renderWithRouter(
-    <MyProvider>
-      <App />
-    </MyProvider>
-  );
+    const recipePhoto = await screen.findByTestId('recipe-photo');
 
-  const emailInput = screen.getByTestId('email-input');
-  const passwordInput = screen.getByTestId('password-input');
-  const submitButton = screen.getByTestId('login-submit-btn');
+    expect(recipePhoto).toBeInTheDocument();
+  });
 
-  userEvent.type(emailInput, 'teste@teste.com');
-  userEvent.type(passwordInput, 'senhateste');
-  userEvent.click(submitButton);
+  it('search foods by ingredient correctly', async () => {
+    const { history } = renderWithRouter(
+      <MyProvider>
+        <App />
+      </MyProvider>
+    );
 
-  const drinkLink = screen.getByTestId(/drinks-bottom-btn/i)
-  userEvent.click(drinkLink);
+    history.push('/foods');
 
-  const showSearchBar = screen.getByTestId(/search-top-btn/i);
-  userEvent.click(showSearchBar);
+    const searchIcon = await screen.findByTestId('search-top-btn');
+    expect(searchIcon).toBeInTheDocument();
+    userEvent.click(searchIcon);
 
-  const SearchBar = screen.getByTestId(/search-input/i);
+    const radio = await screen.findByText(/ingredient/i);
+    expect(radio).toBeInTheDocument();
+    userEvent.click(radio);
 
-  const radioIngredient = screen.getByTestId(/ingredient-search-radio/i);
+    const inputText = await screen.findByTestId('search-input');
+    expect(inputText).toBeInTheDocument();
+    userEvent.type(inputText, 'egg');
 
-  const searchButton = screen.getByTestId(/exec-search-btn/i);
+    const searchBtn = await screen.findByTestId('exec-search-btn');
+    expect(searchBtn).toBeInTheDocument();
+    userEvent.click(searchBtn);
 
-  userEvent.click(radioIngredient);
-  userEvent.type('lemon', SearchBar);
-  userEvent.click(searchButton);
+    const cardName = await screen.findByText('Beef Lo Mein')
 
-  const meal = await screen.findByTestId('0-card-img');
-  expect(meal).toBeDefined();
+    expect(cardName).toBeInTheDocument();
+  });
+
+  it('search foods by first letter correctly', async () => {
+    const { history } = renderWithRouter(
+      <MyProvider>
+        <App />
+      </MyProvider>
+    );
+
+    history.push('/foods');
+
+    const searchIcon = await screen.findByTestId('search-top-btn');
+    expect(searchIcon).toBeInTheDocument();
+    userEvent.click(searchIcon);
+
+    const radio = await screen.findByText(/First Letter/i);
+    expect(radio).toBeInTheDocument();
+    userEvent.click(radio);
+
+    const inputText = await screen.findByTestId('search-input');
+    expect(inputText).toBeInTheDocument();
+    userEvent.type(inputText, 'l');
+
+    const searchBtn = await screen.findByTestId('exec-search-btn');
+    expect(searchBtn).toBeInTheDocument();
+    userEvent.click(searchBtn);
+
+    const cardName = await screen.findByText('Lamb tomato and sweet spices')
+
+    expect(cardName).toBeInTheDocument();
+  });
+
+  it('search drinks by ingredient correctly', async () => {
+    const { history } = renderWithRouter(
+      <MyProvider>
+        <App />
+      </MyProvider>
+    );
+
+    history.push('/drinks');
+
+    const searchIcon = await screen.findByTestId('search-top-btn');
+    expect(searchIcon).toBeInTheDocument();
+    userEvent.click(searchIcon);
+
+    const radio = await screen.findByText(/ingredient/i);
+    expect(radio).toBeInTheDocument();
+    userEvent.click(radio);
+
+    const inputText = await screen.findByTestId('search-input');
+    expect(inputText).toBeInTheDocument();
+    userEvent.type(inputText, 'water');
+
+    const searchBtn = await screen.findByTestId('exec-search-btn');
+    expect(searchBtn).toBeInTheDocument();
+    userEvent.click(searchBtn);
+
+    const cardName = await screen.findByText('Adam Sunrise')
+
+    expect(cardName).toBeInTheDocument();
+  });
+
+  it('search drinks by first letter correctly', async () => {
+    const { history } = renderWithRouter(
+      <MyProvider>
+        <App />
+      </MyProvider>
+    );
+
+    history.push('/drinks');
+
+    const searchIcon = await screen.findByTestId('search-top-btn');
+    expect(searchIcon).toBeInTheDocument();
+    userEvent.click(searchIcon);
+
+    const radio = await screen.findByText(/First Letter/i);
+    expect(radio).toBeInTheDocument();
+    userEvent.click(radio);
+
+    const inputText = await screen.findByTestId('search-input');
+    expect(inputText).toBeInTheDocument();
+    userEvent.type(inputText, 'w');
+
+    const searchBtn = await screen.findByTestId('exec-search-btn');
+    expect(searchBtn).toBeInTheDocument();
+    userEvent.click(searchBtn);
+
+    const cardName = await screen.findByText('Whisky Mac')
+
+    expect(cardName).toBeInTheDocument();
+  });
+
+  it('shows an alert when no foods is found', async () => {
+    const { history } = renderWithRouter(
+      <MyProvider>
+        <App />
+      </MyProvider>
+    );
+
+    history.push('/foods');
+
+    const searchIcon = await screen.findByTestId('search-top-btn');
+    expect(searchIcon).toBeInTheDocument();
+    userEvent.click(searchIcon);
+
+    const nameRadio = await screen.findByText(/Name/i);
+    expect(nameRadio).toBeInTheDocument();
+    userEvent.click(nameRadio);
+
+    const inputText = await screen.findByTestId('search-input');
+    expect(inputText).toBeInTheDocument();
+    userEvent.type(inputText, 'xablau');
+
+    const searchBtn = await screen.findByTestId('exec-search-btn');
+    expect(searchBtn).toBeInTheDocument();
+    userEvent.click(searchBtn);
+
+    // Não consegui testar o alert
+  });
 })
